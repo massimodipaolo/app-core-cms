@@ -17,7 +17,7 @@ namespace bom.Migrations
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-beta8")
+                .HasAnnotation("ProductVersion", "7.0.0-rc1-final")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
@@ -28,10 +28,10 @@ namespace bom.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasAnnotation("MaxLength", 128);
 
                     b.HasKey("Id");
 
@@ -46,9 +46,11 @@ namespace bom.Migrations
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd();
 
-                    b.Property<string>("ClaimType");
+                    b.Property<string>("ClaimType")
+                        .HasAnnotation("MaxLength", 256);
 
-                    b.Property<string>("ClaimValue");
+                    b.Property<string>("ClaimValue")
+                        .HasAnnotation("MaxLength", 4000);
 
                     b.Property<string>("RoleId");
 
@@ -99,7 +101,7 @@ namespace bom.Migrations
                     b.HasAnnotation("Relational:TableName", "AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("wa_vnext.Models.ApplicationUser", b =>
+            modelBuilder.Entity("bom.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");
 
@@ -123,13 +125,16 @@ namespace bom.Migrations
                     b.Property<string>("NormalizedUserName")
                         .HasAnnotation("MaxLength", 256);
 
-                    b.Property<string>("PasswordHash");
+                    b.Property<string>("PasswordHash")
+                        .HasAnnotation("MaxLength", 4000); 
 
-                    b.Property<string>("PhoneNumber");
+                    b.Property<string>("PhoneNumber")
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<bool>("PhoneNumberConfirmed");
 
-                    b.Property<string>("SecurityStamp");
+                    b.Property<string>("SecurityStamp")
+                        .HasAnnotation("MaxLength", 36); 
 
                     b.Property<bool>("TwoFactorEnabled");
 
@@ -156,14 +161,14 @@ namespace bom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
@@ -174,7 +179,7 @@ namespace bom.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId");
 
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });

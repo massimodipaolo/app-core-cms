@@ -16,7 +16,7 @@ namespace bom.Migrations
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
             modelBuilder
-                .HasAnnotation("ProductVersion", "7.0.0-beta8")
+                .HasAnnotation("ProductVersion", "7.0.0-rc1-final")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRole", b =>
@@ -27,17 +27,18 @@ namespace bom.Migrations
                         .IsConcurrencyToken();
 
                     b.Property<string>("Name")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasAnnotation("MaxLength", 128);
 
                     b.Property<string>("NormalizedName")
-                        .HasAnnotation("MaxLength", 256);
+                        .HasAnnotation("MaxLength", 128);
 
                     b.HasKey("Id");
 
                     b.HasIndex("NormalizedName")
                         .HasAnnotation("Relational:Name", "RoleNameIndex");
 
-                    b.HasAnnotation("Relational:TableName", "AspNetRoles");
+                    b.HasAnnotation("Relational:Schema", "Identity")
+                     .HasAnnotation("Relational:TableName", "Roles");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityRoleClaim<string>", b =>
@@ -98,7 +99,7 @@ namespace bom.Migrations
                     b.HasAnnotation("Relational:TableName", "AspNetUserRoles");
                 });
 
-            modelBuilder.Entity("wa_vnext.Models.ApplicationUser", b =>
+            modelBuilder.Entity("bom.Models.ApplicationUser", b =>
                 {
                     b.Property<string>("Id");
 
@@ -155,14 +156,14 @@ namespace bom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
@@ -173,7 +174,7 @@ namespace bom.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId");
 
-                    b.HasOne("wa_vnext.Models.ApplicationUser")
+                    b.HasOne("bom.Models.ApplicationUser")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });

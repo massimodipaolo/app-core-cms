@@ -24,7 +24,7 @@ namespace bom
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
             if (env.IsDevelopment())
-            {
+            {                
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
             }
@@ -40,10 +40,10 @@ namespace bom
         public void ConfigureServices(IServiceCollection services)
         {
             // Add framework services.
+            var connection = Configuration["Data:DefaultConnection:ConnectionString"];
             services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+                .AddSqlServer()                
+                .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection)); 
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -63,26 +63,30 @@ namespace bom
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
-            {
-                app.UseBrowserLink();
+            {                
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
-            }
-            else
-            {
-                app.UseExceptionHandler("/Home/Error");
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
+                /*
                 try
                 {
                     using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                         .CreateScope())
-                    {
+                    {                        
                         serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
                              .Database.Migrate();
                     }
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    throw ex;
+                }
+                */
+            }
+            else
+            {
+                app.UseExceptionHandler("/Home/Error");
             }
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
