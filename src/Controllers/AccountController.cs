@@ -18,21 +18,15 @@ namespace bom.Controllers
     [Authorize]
     public class AccountController : Controller
     {
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
-        ApplicationUser[] ApplicationUsers = new ApplicationUser[]
-        {
-            new ApplicationUser {Id="dd59f502-7d80-42fd-976d-7b1e05cc360c", UserName="Massimo",Email="massimo.dipaolo@gmail.com"},
-            new ApplicationUser {Id="cf258ae3-7a03-479c-bcfa-3646b9688b2e", UserName="Filippo",Email="filippo.dipaolo@gmail.com"}
-        };
-
         public AccountController(
-            UserManager<ApplicationUser> userManager,
-            SignInManager<ApplicationUser> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
@@ -47,12 +41,12 @@ namespace bom.Controllers
         [Route("api/[controller]/[action]/{id}")]
         [AllowAnonymous]
         [HttpGet]
-        public IActionResult Find(string id)
+        public async Task<IActionResult> Find(string id)
         {
             if (id == null)
                 return HttpBadRequest();
 
-            var u = ApplicationUsers.FirstOrDefault(_ => _.Id == id);
+            var u = await _userManager.FindByEmailAsync(id);
             if (u==null)
             {
                 return HttpNotFound();
@@ -126,7 +120,7 @@ namespace bom.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -228,7 +222,7 @@ namespace bom.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new User { UserName = model.Email, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -332,7 +326,7 @@ namespace bom.Controllers
             {
                 return View(model);
             }
-            var user = await _userManager.FindByNameAsync(model.Email);
+            var user = await _userManager.FindByNameAsync(model.Email);            
             if (user == null)
             {
                 // Don't reveal that the user does not exist
@@ -467,7 +461,7 @@ namespace bom.Controllers
             }
         }
 
-        private async Task<ApplicationUser> GetCurrentUserAsync()
+        private async Task<User> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }

@@ -16,10 +16,14 @@ namespace bom
 {
     public class Startup
     {
+        private IConfigurationRoot _config;
+        private IHostingEnvironment _env;
         public Startup(IHostingEnvironment env)
         {
+            _env = env;
+
             // Set up configuration sources.
-            var builder = new ConfigurationBuilder()
+            var builder = new ConfigurationBuilder()                
                 .AddJsonFile("appsettings.json")
                 .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
 
@@ -30,7 +34,7 @@ namespace bom
             }
 
             builder.AddEnvironmentVariables();
-            Configuration = builder.Build();
+            _config = builder.Build();
 
         }
 
@@ -39,27 +43,28 @@ namespace bom
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            var connection = Configuration["Data:DefaultConnection:ConnectionString"];
+            services.AddInstance(_config);
+
+            // Add framework services.            
             services.AddEntityFramework()
                 .AddSqlServer()                
-                .AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connection)); 
+                .AddDbContext<AppDbContext>(); 
 
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
+            services.AddIdentity<User, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc();            
             
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            services.AddTransient<ISmsSender, AuthMessageSender>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
-        {
-            loggerFactory.AddConsole(Configuration.GetSection("Logging"));
+        {            
+            loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
 
             if (env.IsDevelopment())
@@ -67,22 +72,20 @@ namespace bom
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
 
-                // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
-                /*
+                // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859                
                 try
                 {
                     using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                         .CreateScope())
                     {                        
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
+                        serviceScope.ServiceProvider.GetService<AppDbContext>()
                              .Database.Migrate();
                     }
                 }
                 catch (Exception ex)
                 {
                     throw ex;
-                }
-                */
+                }                
             }
             else
             {

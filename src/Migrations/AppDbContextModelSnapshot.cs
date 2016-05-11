@@ -10,8 +10,8 @@ using bom.Models;
 
 namespace bom.Migrations
 {
-    [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [DbContext(typeof(AppDbContext))]
+    partial class AppDbContextModelSnapshot : ModelSnapshot
     {
         protected override void BuildModel(ModelBuilder modelBuilder)
         {
@@ -156,14 +156,14 @@ namespace bom.Migrations
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("bom.Models.ApplicationUser")
+                    b.HasOne("bom.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("Microsoft.AspNet.Identity.EntityFramework.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("bom.Models.ApplicationUser")
+                    b.HasOne("bom.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
@@ -174,7 +174,7 @@ namespace bom.Migrations
                         .WithMany()
                         .HasForeignKey("RoleId");
 
-                    b.HasOne("bom.Models.ApplicationUser")
+                    b.HasOne("bom.Models.User")
                         .WithMany()
                         .HasForeignKey("UserId");
                 });
