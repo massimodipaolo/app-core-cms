@@ -39,7 +39,7 @@ namespace bom.Migrations
                     AccessFailedCount = table.Column<int>(nullable: false),
                     ConcurrencyStamp = table.Column<string>(type: "varchar(36)", nullable: true),
                     Email = table.Column<string>(type: "nvarchar(256)", nullable: true),
-                    EmailConfirmed = table.Column<bool>(type: "nvarchar(256)", nullable: false),
+                    EmailConfirmed = table.Column<bool>(nullable: false),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
                     NormalizedEmail = table.Column<string>(type: "nvarchar(256)", nullable: true),
