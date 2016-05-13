@@ -31,7 +31,7 @@ namespace bom
             {                
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets();
-            }
+            }            
 
             builder.AddEnvironmentVariables();
             _config = builder.Build();
@@ -45,8 +45,8 @@ namespace bom
         {
             services.AddInstance(_config);
 
-            // Add framework services.            
-            services.AddEntityFramework()
+            // Add framework services.                                    
+            services.AddEntityFramework()                               
                 .AddSqlServer()                
                 .AddDbContext<AppDbContext>(); 
 
@@ -77,10 +77,12 @@ namespace bom
                 {
                     using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
                         .CreateScope())
-                    {                        
-                        serviceScope.ServiceProvider.GetService<AppDbContext>()
-                             .Database.Migrate();
+                    {   
+                        var _db = serviceScope.ServiceProvider.GetService<AppDbContext>();
+                        _db.Database.Migrate();                        
+                        //_db.Seed();                        
                     }
+                    
                 }
                 catch (Exception ex)
                 {
@@ -97,7 +99,7 @@ namespace bom
             app.UseStaticFiles(); 
             
             app.UseIdentity();
-
+            
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>

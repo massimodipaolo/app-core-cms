@@ -8,6 +8,13 @@ namespace bom.Controllers
 {
     public class HomeController : Controller
     {
+        private Models.AppDbContext _context;
+
+        public HomeController(Models.AppDbContext context)
+        {
+            _context = context;
+        }
+
         public IActionResult Index()
         {   
             return View();
@@ -25,6 +32,11 @@ namespace bom.Controllers
             ViewData["Message"] = "Your contact page.";
 
             return View();
+        }
+
+        public IActionResult Users()
+        {   
+            return new ObjectResult(_context.Users.ToList());
         }
 
         public IActionResult Error()

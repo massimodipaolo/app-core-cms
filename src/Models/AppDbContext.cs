@@ -12,26 +12,28 @@ namespace bom.Models
     public class AppDbContext : IdentityDbContext<User>
     {
         private IConfigurationRoot _config;
+        private static bool _isInitialized;
 
         #region Properties        
-        public new DbSet<User> Users { get; set; }
+        //public new DbSet<User> Users { get; set; }
         #endregion
 
 
-        public AppDbContext(IConfigurationRoot config)  {            
+        public AppDbContext(IConfigurationRoot config)
+        {
             _config = config;
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(_config["Data:DefaultConnection:ConnectionString"]);            
+            builder.UseSqlServer(_config["Data:DefaultConnection:ConnectionString"]);               
             base.OnConfiguring(builder);
         }
 
         protected override void OnModelCreating(ModelBuilder mb)
         {
-            base.OnModelCreating(mb);            
-            
+            base.OnModelCreating(mb);
+
             // ASP.NET Identity
             mb.Entity<User>().ToTable("Users", "Identity");
             mb.Entity<IdentityRole>().ToTable("Roles", "Identity");
