@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Authorization;
+using Microsoft.Data.Entity;
 
 namespace bom.Controllers
 {
@@ -36,9 +38,20 @@ namespace bom.Controllers
 
         public IActionResult Users()
         {   
-            return new ObjectResult(_context.Users.ToList());
+            return new ObjectResult(_context.Users
+                .Include(u => u.Roles)                
+                .ToList()
+                );
         }
 
+        public IActionResult Roles()
+        {
+            return new ObjectResult(_context.Roles
+                .Include(r => r.Users)
+                .Include(r => r.Claims)
+                .ToList()
+                );
+        }
         public IActionResult Error()
         {
             return View();

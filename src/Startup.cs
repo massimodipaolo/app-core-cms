@@ -30,10 +30,10 @@ namespace bom
             if (env.IsDevelopment())
             {                
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
-                builder.AddUserSecrets();
+                builder.AddUserSecrets(); // %APPDATA%\microsoft\UserSecrets\<applicationId>\secrets.json
             }            
+            builder.AddEnvironmentVariables(); //override *.json config
 
-            builder.AddEnvironmentVariables();
             _config = builder.Build();
 
         }
@@ -46,9 +46,9 @@ namespace bom
             services.AddInstance(_config);
 
             // Add framework services.                                    
-            services.AddEntityFramework()                               
-                .AddSqlServer()                
-                .AddDbContext<AppDbContext>(); 
+            services.AddEntityFramework()
+                .AddSqlServer()
+                .AddDbContext<AppDbContext>();
 
             services.AddIdentity<User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
@@ -75,19 +75,14 @@ namespace bom
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859                
                 try
                 {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
+                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>().CreateScope())
                     {   
                         var _db = serviceScope.ServiceProvider.GetService<AppDbContext>();
                         _db.Database.Migrate();                        
-                        //_db.Seed();                        
+                        _db.Seed(app);
                     }
-                    
                 }
-                catch (Exception ex)
-                {
-                    throw ex;
-                }                
+                catch {}                
             }
             else
             {

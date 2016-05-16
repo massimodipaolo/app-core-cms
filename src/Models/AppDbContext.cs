@@ -6,13 +6,15 @@ using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Data.Entity.Infrastructure;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Builder;
 
 namespace bom.Models
 {
     public class AppDbContext : IdentityDbContext<User>
     {
         private IConfigurationRoot _config;
-        private static bool _isInitialized;
 
         #region Properties        
         //public new DbSet<User> Users { get; set; }
@@ -26,8 +28,11 @@ namespace bom.Models
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
         {
-            builder.UseSqlServer(_config["Data:DefaultConnection:ConnectionString"]);               
-            base.OnConfiguring(builder);
+            if (!builder.IsConfigured)
+            {
+                builder.UseSqlServer(_config["Data:DefaultConnection:ConnectionString"]);
+                base.OnConfiguring(builder);
+            }
         }
 
         protected override void OnModelCreating(ModelBuilder mb)
@@ -42,5 +47,47 @@ namespace bom.Models
             mb.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
             mb.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");
         }
+
+        public void Seed(IApplicationBuilder app)
+        {
+            //Identity
+            SeedIdentity(app);
+
+            //Application data
+            SeedAppData();
+        }
+
+        private async void SeedIdentity(IApplicationBuilder app)
+        {
+            if (!Roles.Any())
+            {
+                // 'admin' role
+                using (var _roleManager = app.ApplicationServices.GetRequiredService<RoleManager<IdentityRole>>())
+                {
+                    var adminRole = new IdentityRole("Admin");
+                    await _roleManager.CreateAsync(adminRole);
+                    //await _roleManager.AddClaimAsync(adminRole, new System.Security.Claims.Claim("Permission","*"));
+                };
+            }
+            if (!Users.Any())
+            {
+                // Admin user
+                using (var _userManager = app.ApplicationServices.GetRequiredService<UserManager<User>>())
+                {
+                    var adminUser = new User();
+                    #warning Change this data ASAP!
+                    adminUser.UserName = "admin";
+                    adminUser.Email = "admin@mydomain.com";                    
+                    await _userManager.CreateAsync(adminUser, "MYP@55word");                    
+                    await _userManager.AddToRoleAsync(adminUser, "admin");                    
+                };
+            }
+        }
+
+        private void SeedAppData()
+        {
+
+        }
+
     }
 }

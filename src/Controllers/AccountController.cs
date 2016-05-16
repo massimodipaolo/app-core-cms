@@ -38,22 +38,6 @@ namespace bom.Controllers
             _logger = loggerFactory.CreateLogger<AccountController>();
         }
 
-        [Route("api/[controller]/[action]/{id}")]
-        [AllowAnonymous]
-        [HttpGet]
-        public async Task<IActionResult> Find(string id)
-        {
-            if (id == null)
-                return HttpBadRequest();
-
-            var u = await _userManager.FindByEmailAsync(id);
-            if (u==null)
-            {
-                return HttpNotFound();
-            }
-            return new ObjectResult(u);
-        }
-
         //
         // GET: /Account/Login
         [HttpGet]
