@@ -21,24 +21,20 @@ namespace bom
         public Startup(IHostingEnvironment env)
         {
             _env = env;
-
+                        
             // Set up configuration sources.
-            var builder = new ConfigurationBuilder()                
+            var builder = new ConfigurationBuilder()                                
                 .AddJsonFile("appsettings.json")
-                .AddJsonFile($"appsettings.{env.EnvironmentName}.json", optional: true);
-
-            if (env.IsDevelopment())
+                .AddJsonFile($"appsettings.{_env.EnvironmentName}.json", optional: true)
+                .AddEnvironmentVariables(); //override any config files / user secrets          
+            
+            if (_env.IsDevelopment())
             {                
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets(); // %APPDATA%\microsoft\UserSecrets\<applicationId>\secrets.json
-            }            
-            builder.AddEnvironmentVariables(); //override *.json config
-
-            _config = builder.Build();
-
+            }                        
+            _config = builder.Build();            
         }
-
-        public IConfigurationRoot Configuration { get; set; }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -54,20 +50,22 @@ namespace bom
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();            
-            
+            services.AddMvc();
+                 
+                        
             // Add application services.
+            //services.AddTransient<DbContext,AppDbContext>;
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();            
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
+        public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {            
             loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            if (env.IsDevelopment())
+            if (_env.IsDevelopment())
             {                
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
@@ -93,7 +91,8 @@ namespace bom
 
             app.UseStaticFiles(); 
             
-            app.UseIdentity();
+            app.UseIdentity();            
+                        
             
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 

@@ -23,7 +23,7 @@ namespace bom.Models
 
         public AppDbContext(IConfigurationRoot config)
         {
-            _config = config;
+            _config = config;            
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder builder)
@@ -49,12 +49,12 @@ namespace bom.Models
         }
 
         public void Seed(IApplicationBuilder app)
-        {
+        {            
             //Identity
             SeedIdentity(app);
 
             //Application data
-            SeedAppData();
+            SeedAppData();            
         }
 
         private async void SeedIdentity(IApplicationBuilder app)
@@ -75,18 +75,31 @@ namespace bom.Models
                 using (var _userManager = app.ApplicationServices.GetRequiredService<UserManager<User>>())
                 {
                     var adminUser = new User();
-                    #warning Change this data ASAP!
-                    adminUser.UserName = "admin";
-                    adminUser.Email = "admin@mydomain.com";                    
-                    await _userManager.CreateAsync(adminUser, "MYP@55word");                    
-                    await _userManager.AddToRoleAsync(adminUser, "admin");                    
+                    string _userName=null,_email=null,_password=null;
+                    var _userSecrets = _config["Authentication:Admin:UserName"];
+                    if (_userSecrets == null)
+                    {
+                        #warning Use secrets or change/delete this data
+                        _userName = $"{Guid.NewGuid()}@{Guid.NewGuid()}.com";
+                        _email = _userName;
+                        _password = "$P455w0rd";                                                
+                    } else
+                    {
+                        _userName = _config["Authentication:Admin:UserName"];
+                        _email = _config["Authentication:Admin:Email"];
+                        _password = _config["Authentication:Admin:Password"];
+                    }
+                    adminUser.UserName = _userName;
+                    adminUser.Email = _email;
+                    await _userManager.CreateAsync(adminUser, _password);
+                    await _userManager.AddToRoleAsync(adminUser, "Admin");
                 };
             }
         }
 
-        private void SeedAppData()
+        private async Task SeedAppData()
         {
-
+            await Task.FromResult(0);
         }
 
     }
