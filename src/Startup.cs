@@ -11,6 +11,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using bom.Models;
 using bom.Services;
+using Microsoft.AspNet.Http;
 
 namespace bom
 {
@@ -50,11 +51,9 @@ namespace bom
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
-                 
+            services.AddMvc();               
                         
-            // Add application services.
-            //services.AddTransient<DbContext,AppDbContext>;
+            // Add application services.            
             services.AddTransient<IEmailSender, AuthMessageSender>();
             services.AddTransient<ISmsSender, AuthMessageSender>();            
         }
@@ -63,7 +62,7 @@ namespace bom
         public void Configure(IApplicationBuilder app, ILoggerFactory loggerFactory)
         {            
             loggerFactory.AddConsole(_config.GetSection("Logging"));
-            loggerFactory.AddDebug();
+            loggerFactory.AddDebug();            
 
             if (_env.IsDevelopment())
             {                
@@ -83,8 +82,8 @@ namespace bom
                 catch {}                
             }
             else
-            {
-                app.UseExceptionHandler("/Home/Error");
+            {                
+                app.UseExceptionHandler("/Home/Error");                
             }
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());

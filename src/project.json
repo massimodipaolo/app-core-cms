@@ -27,7 +27,8 @@
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final"
   },
   "commands": {
-    "web": "Microsoft.AspNet.Server.Kestrel",
+    "web.dev": "Microsoft.AspNet.Server.Kestrel --ASPNET_ENV Development",
+    "web.prod": "Microsoft.AspNet.Server.Kestrel --ASPNET_ENV Production",
     "ef": "EntityFramework.Commands"
   },
   "frameworks": {

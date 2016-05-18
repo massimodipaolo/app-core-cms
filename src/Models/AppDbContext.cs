@@ -97,7 +97,7 @@ namespace bom.Models
             }
         }
 
-        private async Task SeedAppData()
+        private async void SeedAppData()
         {
             await Task.FromResult(0);
         }

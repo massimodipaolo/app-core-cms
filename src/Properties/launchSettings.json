@@ -8,15 +8,29 @@
     }
   },
   "profiles": {
-    "IIS Express": {
+    "IIS Express - Dev": {
       "commandName": "IISExpress",
       "launchBrowser": true,
       "environmentVariables": {
         "Hosting:Environment": "Development"
       }
     },
-    "web": {
-      "commandName": "web",
+    "IIS Express - Prod": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "environmentVariables": {
+        "Hosting:Environment": "Production"
+      }
+    },
+    "Kestrel - Dev": {
+      "commandName": "web.dev"
+    },
+    "Kestrel - Prod": {
+      "commandName": "web.prod"
+    },
+    "IIS Express": {
+      "commandName": "IISExpress",
+      "launchBrowser": true,
       "environmentVariables": {
         "Hosting:Environment": "Development"
       }
