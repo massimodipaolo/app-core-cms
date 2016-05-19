@@ -63,7 +63,7 @@ namespace bom.Data
                 {
                     var adminUser = new User();
                     string _email = null, _password = null;
-                    var _userSecrets = config["Authentication:Admin:UserNam"];
+                    var _userSecrets = config["Authentication:Admin:UserName"];
                     if (_userSecrets == null)
                     {
                         #warning Change this credential!

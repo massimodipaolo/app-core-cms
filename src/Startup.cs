@@ -62,11 +62,13 @@ namespace bom
         {
             loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
-
+            
+            /*
             app.Run(async ctx =>
             {
                 await ctx.Response.WriteAsync($"{_env.EnvironmentName}{Environment.NewLine}{_config.GetConnectionString("DefaultConnection")}");
             });
+            */
 
             if (_env.IsDevelopment())
             {
@@ -90,7 +92,7 @@ namespace bom
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-           
+            
             app.UseStaticFiles();
 
             app.UseIdentity();
