@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.Extensions.Logging;
 using bom.Models;
-using bom.Models.AccountViewModels;
+using bom.Models.ViewModels;
 using bom.Services;
 
 namespace bom.Controllers

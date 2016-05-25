@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using bom.Models;
-using bom.Models.ManageViewModels;
+using bom.Models.ViewModels;
 using bom.Services;
 
 namespace bom.Controllers

@@ -9,6 +9,7 @@ using bom.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
+using bom.Models.Identity;
 
 namespace bom.Data
 {
@@ -30,8 +31,7 @@ namespace bom.Data
             builder.Entity<IdentityUserLogin<string>>().ToTable("UserLogins", "Identity");
             builder.Entity<IdentityUserClaim<string>>().ToTable("UserClaims", "Identity");
             builder.Entity<IdentityUserToken<string>>().ToTable("UserTokens", "Identity");
-            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");
-            
+            builder.Entity<IdentityRoleClaim<string>>().ToTable("RoleClaims", "Identity");            
 
         }
         
