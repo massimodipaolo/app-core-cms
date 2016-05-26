@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace bom.Models.Geography
 {
-    public class Language : Identifiable<int>
+    public class Language : Identifiable<string>
     {
         public string Name { get; set; }
-        public string Code { get; set; }
+        public bool Active { get; set; }
     }
 }

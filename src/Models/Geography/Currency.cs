@@ -5,9 +5,8 @@ using System.Threading.Tasks;
 
 namespace bom.Models.Geography
 {
-    public class Country : Identifiable<string>
+    public class Currency: Identifiable<string>
     {
         public string Name { get; set; }
-        public string Code { get; set; }
     }
 }

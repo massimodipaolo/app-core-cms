@@ -41,12 +41,14 @@ namespace bom
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {            
+        {
+            //services.AddMemoryCache();
+
             // Add framework services.
             services.AddDbContext<AppDbContext>(options =>
                 options.UseSqlServer(_config.GetConnectionString("DefaultConnection")));
 
-            services.AddIdentity<User, IdentityRole>()
+            services.AddIdentity<Models.Identity.User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 

@@ -15,6 +15,10 @@ namespace bom.Data
 {
     public class AppDbContext : IdentityDbContext<User>
     {
+        #region Properties                
+        //public DbSet<Models.Identity.User> Users { get; set; }        
+        #endregion
+
         public AppDbContext(DbContextOptions<AppDbContext> options)
             : base(options)
         {
