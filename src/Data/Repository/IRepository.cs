@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace bom.Data.Repository
 {
-    interface IRepository<T, TKey> where T : class, IIdentifiable<TKey>
+    public interface IRepository<T, TKey> where T : class, IIdentifiable<TKey>
     {
         IQueryable<T> All { get; }
         //IQueryable<T> AllEager(params Expression<Func<T, object>>[] includes);

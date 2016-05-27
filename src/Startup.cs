@@ -36,13 +36,13 @@ namespace bom
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets(); // %APPDATA%\microsoft\UserSecrets\<applicationId>\secrets.json
             }
-            _config = builder.Build();
+            _config = builder.Build();            
         }        
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //services.AddMemoryCache();
+            services.AddMemoryCache();
 
             // Add framework services.
             services.AddDbContext<AppDbContext>(options =>
@@ -86,6 +86,7 @@ namespace bom
                         var _db = serviceScope.ServiceProvider.GetService<AppDbContext>();
                         _db.Database.Migrate();
                         _db.Seed(app,_config);
+                        
                     }
                 }
                 catch { }

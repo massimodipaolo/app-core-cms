@@ -1,14 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
-using bom.Models;
-using bom.Models.ViewModels;
 using bom.Services;
+using bom.Models.Identity;
+using bom.Models.Identity.ViewModels;
 
 namespace bom.Controllers
 {

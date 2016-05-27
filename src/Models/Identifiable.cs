@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace bom.Models
 {
-    interface IIdentifiable<TKey> 
+    public interface IIdentifiable<TKey> 
     {
         TKey Id { get; set; }            
     }
