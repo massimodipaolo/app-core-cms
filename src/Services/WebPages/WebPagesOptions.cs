@@ -3,7 +3,7 @@
 
     public class WebPagesOptions
     {
-        public string RootViewName { get; set; } = null;
+        public string RootViewName { get; set; } = "_ViewDoc";
 
         public string ViewsFolderName { get; set; } = "Views";
     }
