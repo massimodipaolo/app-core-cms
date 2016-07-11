@@ -7,12 +7,14 @@ namespace bom.Models
 {
     public interface IIdentifiable<TKey> 
     {
-        TKey Id { get; set; }            
+        TKey Id { get; set; }                  
     }
 
     public class Identifiable<TKey> : IIdentifiable<TKey>
     {
-        public virtual TKey Id { get; set; }                
+        public virtual TKey Id { get; set; }                        
     }
+
+    
 
 }

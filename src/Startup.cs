@@ -13,6 +13,7 @@ using bom.Data;
 using bom.Models;
 using bom.Services;
 using Microsoft.AspNetCore.Http;
+using bom.Services.WebPages;
 
 namespace bom
 {
@@ -51,6 +52,8 @@ namespace bom
             services.AddIdentity<Models.Identity.User, IdentityRole>()
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
+
+            services.AddWebPages();
 
             services.AddMvc();
 
@@ -101,6 +104,8 @@ namespace bom
             app.UseIdentity();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
+
+            app.UseWebPages(new WebPagesOptions());
 
             app.UseMvc(routes =>
             {

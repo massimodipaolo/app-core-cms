@@ -10,6 +10,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using bom.Models.Identity;
+using bom.Models.Geography;
 
 namespace bom.Data
 {
@@ -90,6 +91,8 @@ namespace bom.Data
         {
             await Task.FromResult(0);
         }
+
+        public DbSet<Country> Country { get; set; }
         
     }
 }

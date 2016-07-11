@@ -9,5 +9,6 @@ namespace bom.Models.Geography
     {
         public string Name { get; set; }
         public string Code { get; set; }
+        public static IEnumerable<Country> List { get; set; }
     }
 }
