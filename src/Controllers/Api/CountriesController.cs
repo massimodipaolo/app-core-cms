@@ -9,9 +9,8 @@ using bom.Data;
 using bom.Models.Geography;
 
 namespace bom.Controllers.Api
-{
-    [Produces("application/json")]
-    [Route("api/Countries")]
+{    
+    [Route("api/[controller]")]
     public class CountriesController : Controller
     {
         private readonly AppDbContext _context;

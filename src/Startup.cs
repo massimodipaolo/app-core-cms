@@ -13,7 +13,7 @@ using bom.Data;
 using bom.Models;
 using bom.Services;
 using Microsoft.AspNetCore.Http;
-using bom.Services.WebPages;
+using Microsoft.AspNetCore.Routing;
 
 namespace bom
 {
@@ -37,8 +37,8 @@ namespace bom
                 // For more details on using the user secret store see http://go.microsoft.com/fwlink/?LinkID=532709
                 builder.AddUserSecrets(); // %APPDATA%\microsoft\UserSecrets\<applicationId>\secrets.json
             }
-            _config = builder.Build();            
-        }        
+            _config = builder.Build();
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -53,8 +53,6 @@ namespace bom
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddWebPages();
-
             services.AddMvc();
 
             // Add application services.
@@ -67,19 +65,18 @@ namespace bom
         {
             loggerFactory.AddConsole(_config.GetSection("Logging"));
             loggerFactory.AddDebug();
-            
+
             /*
             app.Run(async ctx =>
             {
                 await ctx.Response.WriteAsync($"{_env.EnvironmentName}{Environment.NewLine}{_config.GetConnectionString("DefaultConnection")}");
             });
-            */
-
+            */            
+            
             if (_env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
-                //app.UseBrowserLink();
+                app.UseDatabaseErrorPage();                                
 
                 // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859                
                 try
@@ -88,31 +85,38 @@ namespace bom
                     {
                         var _db = serviceScope.ServiceProvider.GetService<AppDbContext>();
                         _db.Database.Migrate();
-                        _db.Seed(app,_config);
-                        
+                        _db.Seed(app, _config);
                     }
                 }
                 catch { }
             }
             else
             {
-                app.UseExceptionHandler("/Home/Error");
-            }
-            
+                //app.UseExceptionHandler("/Home/Error");
+                app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
+            }            
+
             app.UseStaticFiles();
 
+            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseIdentity();
 
-            // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
-
-            app.UseWebPages(new WebPagesOptions());
-
-            app.UseMvc(routes =>
+            app.UseMvc(_routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                var _prefix = "{lg:regex(it|en|de)?}/";
+
+                _routes.MapRoute(name: "default",
+                                template: _prefix + "{controller=Root}/{action=Index}/{id?}");
+
+                _routes.MapRoute(name: "cms",
+                                template: "cms/{action=Table}/{entity?}/{operation:regex(view|create|edit)?}/{id?}",
+                                defaults: new { controller = "Cms" });
+
+                _routes.MapRoute(name: "catchall",
+                                template: _prefix + "{*catchall}",
+                                defaults: new { controller = "Root", action = "Index" });
             });
+
         }
     }
 }

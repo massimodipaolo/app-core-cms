@@ -17,7 +17,8 @@ namespace bom.Data
     public class AppDbContext : IdentityDbContext<User>
     {
         #region Properties                
-        //public DbSet<Models.Identity.User> Users { get; set; }        
+        //public DbSet<Models.Identity.User> Users { get; set; }  
+        public DbSet<Country> Country { get; set; }
         #endregion
 
         public AppDbContext(DbContextOptions<AppDbContext> options)
@@ -90,9 +91,7 @@ namespace bom.Data
         private async void SeedAppData()
         {
             await Task.FromResult(0);
-        }
-
-        public DbSet<Country> Country { get; set; }
+        }        
         
     }
 }
