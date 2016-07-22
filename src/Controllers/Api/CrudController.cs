@@ -8,10 +8,8 @@ using bom.Data.Repository;
 using bom.Models;
 using Microsoft.Extensions.Caching.Memory;
 
-namespace src.Controllers
-{
-    [Produces("application/json")]
-    [Route("api/[controller]")]
+namespace bom.Controllers.Api
+{    
     public class CrudController<T,TKey> : Controller where T : class, IIdentifiable<TKey>
     {        
         private readonly IRepository<T, TKey> _repository;

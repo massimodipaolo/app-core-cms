@@ -14,6 +14,8 @@ using bom.Models;
 using bom.Services;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.Net.Http.Headers;
 
 namespace bom
 {
@@ -53,7 +55,14 @@ namespace bom
                 .AddEntityFrameworkStores<AppDbContext>()
                 .AddDefaultTokenProviders();
 
-            services.AddMvc();
+            services.AddMvc(
+                    opt => {
+                        opt.UseApiRoutePrefix(new RouteAttribute("api/[controller]" /*"api/v{version}"*/));
+                        //opt.FormatterMappings.SetMediaTypeMappingForFormat("xml", new MediaTypeHeaderValue("application/xml"));
+                    }
+                )
+                //.AddXmlDataContractSerializerFormatters()
+                ;            
 
             // Add application services.
             services.AddTransient<IEmailSender, AuthMessageSender>();
@@ -71,10 +80,10 @@ namespace bom
             {
                 await ctx.Response.WriteAsync($"{_env.EnvironmentName}{Environment.NewLine}{_config.GetConnectionString("DefaultConnection")}");
             });
-            */            
+            */
             
             if (_env.IsDevelopment())
-            {
+            {                
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();                                
 
@@ -91,19 +100,21 @@ namespace bom
                 catch { }
             }
             else
-            {
-                //app.UseExceptionHandler("/Home/Error");
+            {                
                 app.UseStatusCodePagesWithReExecute("/Home/Error/{0}");
             }            
-
-            app.UseStaticFiles();
 
             // Add external authentication middleware below. To configure them please see http://go.microsoft.com/fwlink/?LinkID=532715
             app.UseIdentity();
 
+            app.UseStaticFiles();
+
             app.UseMvc(_routes =>
             {
-                var _prefix = "{lg:regex(it|en|de)?}/";
+                
+                var _prefix = ""; // "{lg:regex(it|en|de)?}/";                
+
+                //_routes.DefaultHandler = new bom.Services.RouteDebugger();
 
                 _routes.MapRoute(name: "default",
                                 template: _prefix + "{controller=Root}/{action=Index}/{id?}");
@@ -112,9 +123,15 @@ namespace bom
                                 template: "cms/{action=Table}/{entity?}/{operation:regex(view|create|edit)?}/{id?}",
                                 defaults: new { controller = "Cms" });
 
+                /*
                 _routes.MapRoute(name: "catchall",
-                                template: _prefix + "{*catchall}",
+                                template: _prefix + "{*catch-all}",
                                 defaults: new { controller = "Root", action = "Index" });
+                */
+
+                // Microsoft.AspNetCore.SpaServices: http://blog.nbellocam.me/2016/03/21/routing-angular-2-asp-net-core/
+                //_routes.MapSpaFallbackRoute("spa-fallback",defaults: new { controller = "Root", action = "Index" });
+                
             });
 
         }

@@ -10,7 +10,7 @@ using bom.Models.Geography;
 
 namespace bom.Controllers.Api
 {    
-    [Route("api/[controller]")]
+    //[FormatFilter]
     public class CountriesController : Controller
     {
         private readonly AppDbContext _context;
@@ -21,14 +21,14 @@ namespace bom.Controllers.Api
         }
 
         // GET: api/Countries
-        [HttpGet]
-        public IEnumerable<Country> GetCountry()
+        [HttpGet]        
+        public IEnumerable<Country> GetCountry(int version)
         {
-            return _context.Country;
+            return _context.Country;            
         }
 
         // GET: api/Countries/5
-        [HttpGet("{id}")]
+        [HttpGet("{id}")]                
         public async Task<IActionResult> GetCountry([FromRoute] string id)
         {
             if (!ModelState.IsValid)
@@ -89,7 +89,7 @@ namespace bom.Controllers.Api
             {
                 return BadRequest(ModelState);
             }
-
+            
             _context.Country.Add(country);
             try
             {
@@ -105,8 +105,7 @@ namespace bom.Controllers.Api
                 {
                     throw;
                 }
-            }
-
+            }            
             return CreatedAtAction("GetCountry", new { id = country.Id }, country);
         }
 
