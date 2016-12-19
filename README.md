@@ -1,4 +1,4 @@
-# bom-core
+# app-core
 A multi-language focused .NET Core CMS.
 
 ##License##
